@@ -1,6 +1,6 @@
 enemy_x = 25
 enemy_y = 50
-enemy_dx = 1
+enemy_dx = 3
 enemy_step_y = 10
 
 enemy_width = 40
@@ -40,6 +40,10 @@ def draw():
         enemy_dx *= -1
         enemy_y += enemy_step_y
     enemy_x += enemy_dx
+    
+    if (enemy_y + len(enemies) * enemy_height) > 550:
+        enemy_dx = 0
+        print("GAME OVER")
     
     delay(16)
     
