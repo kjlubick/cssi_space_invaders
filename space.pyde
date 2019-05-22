@@ -23,11 +23,16 @@ def setup():
     size(600, 600)
     
 def draw():
-    global enemy_x
-    global enemy_y
-    global enemy_dx
-    
     background(0,0,0)
+    drawEnemies()
+    drawShip(player_x, player_y)
+    
+    moveEnemies()
+    checkGameOver()
+    
+    delay(16)
+    
+def drawEnemies():    
     stroke(255,255,255)
     fill(255, 0, 255)
     y = enemy_y
@@ -40,18 +45,23 @@ def draw():
                 ellipse(x+enemy_width/2, y+enemy_width/2, enemy_width, enemy_width)
             x += (enemy_width + enemy_space)
         y += enemy_height
-        
+
+def moveEnemies():
+    global enemy_x
+    global enemy_y
+    global enemy_dx
+    
     if enemy_x < 25 or enemy_x > 125:
         enemy_dx *= -1
         enemy_y += enemy_step_y
     enemy_x += enemy_dx
-    drawShip(player_x, player_y)
 
-    if (enemy_y + len(enemies) * enemy_height) > 550:
+def checkGameOver():
+    global enemy_dx
+    if (enemy_y + len(enemies) * enemy_height) >= player_y:
         enemy_dx = 0
         print("GAME OVER")
-    delay(16)
-    
+
 def drawShip(ship_x, ship_y):
     fill(0, 255, 0)
     ship_size = 10
