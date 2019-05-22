@@ -2,6 +2,7 @@
 player_x = 300
 player_y = 500
 ship_size = 10
+player_score = 0
 
 # Enemies
 enemy_x = 25
@@ -30,6 +31,7 @@ def setup():
     
 def draw():
     background(0,0,0)
+    drawScore()
     drawEnemies()
     updateShip()
     drawShip(player_x, player_y)
@@ -39,6 +41,11 @@ def draw():
     
     delay(16)
     
+def drawScore():
+    textSize(30)
+    fill(255, 255, 255) 
+    text("Score: "+str(player_score), 400, 30) 
+
 def drawEnemies():    
     stroke(255,255,255)
     fill(255, 0, 255)
