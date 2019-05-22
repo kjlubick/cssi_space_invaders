@@ -1,6 +1,7 @@
 # Player
 player_x = 300
 player_y = 500
+ship_size = 10
 
 # Enemies
 enemy_x = 25
@@ -19,8 +20,13 @@ enemies=[
        ["circle", "circle", "", "circle", "circle"],
 ]
 
+# Board
+WIDTH = 600
+HEIGHT = 600
+
 def setup():
-    size(600, 600)
+    global WIDTH, HEIGHT
+    size(WIDTH, HEIGHT)
     
 def draw():
     global enemy_x
@@ -45,10 +51,25 @@ def draw():
         enemy_dx *= -1
         enemy_y += enemy_step_y
     enemy_x += enemy_dx
+
+    updateShip()
     drawShip(player_x, player_y)
     delay(16)
     
 def drawShip(ship_x, ship_y):
     fill(0, 255, 0)
-    ship_size = 10
+    global ship_size
     triangle(ship_x - ship_size, ship_y, ship_x, ship_y - ship_size, ship_x + ship_size, ship_y)
+
+def updateShip():
+    global player_x, WIDTH
+    dx = 5
+    if keyPressed and key == CODED:
+        if keyCode == LEFT or keyCode == RIGHT:
+            if keyCode == LEFT:
+                dx = -dx
+            player_x = player_x + dx
+            if player_x - ship_size < 0:
+                player_x = ship_size
+            elif player_x + ship_size > WIDTH:
+                player_x = WIDTH - ship_size
