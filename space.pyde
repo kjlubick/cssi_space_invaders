@@ -1,6 +1,11 @@
+# Player
+player_x = 300
+player_y = 500
+
+# Enemies
 enemy_x = 25
 enemy_y = 50
-enemy_dx = 3
+enemy_dx = 1
 enemy_step_y = 10
 
 enemy_width = 40
@@ -40,10 +45,14 @@ def draw():
         enemy_dx *= -1
         enemy_y += enemy_step_y
     enemy_x += enemy_dx
-    
+    drawShip(player_x, player_y)
+
     if (enemy_y + len(enemies) * enemy_height) > 550:
         enemy_dx = 0
         print("GAME OVER")
-    
     delay(16)
     
+def drawShip(ship_x, ship_y):
+    fill(0, 255, 0)
+    ship_size = 10
+    triangle(ship_x - ship_size, ship_y, ship_x, ship_y - ship_size, ship_x + ship_size, ship_y)
