@@ -58,9 +58,22 @@ def moveEnemies():
 
 def checkGameOver():
     global enemy_dx
-    if (enemy_y + len(enemies) * enemy_height) >= player_y:
+    enemy_rows = 0
+    for r in enemies:
+        for e in r:
+            if e != "":
+                enemy_rows+=1
+                break
+    textSize(60)
+    fill(255, 255, 255)
+    if enemy_rows == 0:
+        # WINNER
         enemy_dx = 0
-        print("GAME OVER")
+        text("You won!!", 150, 250)
+    
+    elif (enemy_y + enemy_rows * enemy_height) >= player_y:
+        enemy_dx = 0
+        text("GAME OVER", 150, 250)
 
 def drawShip(ship_x, ship_y):
     fill(0, 255, 0)
