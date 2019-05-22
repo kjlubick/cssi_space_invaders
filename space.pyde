@@ -1,6 +1,10 @@
 # Player
 player_x = 300
 player_y = 500
+player_projectiles = []
+MAX_PROJECTILES = 3
+PROJECTILE_COOLDOWN = 20
+projectile_cooldown = 0
 ship_size = 10
 player_score = 0
 
@@ -34,6 +38,7 @@ def draw():
     drawScore()
     drawEnemies()
     updateShip()
+    drawProjectiles()
     drawShip(player_x, player_y)
     
     moveEnemies()
@@ -94,10 +99,38 @@ def drawShip(ship_x, ship_y):
     global ship_size
     triangle(ship_x - ship_size, ship_y, ship_x, ship_y - ship_size, ship_x + ship_size, ship_y)
 
+def drawProjectiles():
+    global player_projectiles
+    dy = -10
+    fill(255, 255, 255)
+    to_remove = None
+    for i, projectile in enumerate(player_projectiles):
+        projectile[1] = projectile[1] + dy
+        if projectile[1] < 0:
+            if to_remove:
+                print("multiple projectiles to remove!?")
+            to_remove = i
+        else:
+            ellipse(projectile[0], projectile[1], 10, 10)
+    if to_remove:
+        player_projectiles.pop(i)
+
+
+
 def updateShip():
-    global player_x, WIDTH
+    global projectile_cooldown
+    projectile_cooldown = projectile_cooldown - 1
+    if not keyPressed:
+        return
+    global player_x, WIDTH, player_projectiles
     dx = 5
-    if keyPressed and key == CODED:
+    if key == " ":
+      if projectile_cooldown <= 0 and len(player_projectiles) < MAX_PROJECTILES:
+        player_projectiles.append([player_x, player_y - ship_size])
+        print ("fired a missile")
+        projectile_cooldown = PROJECTILE_COOLDOWN
+
+    elif key == CODED:
         if keyCode == LEFT or keyCode == RIGHT:
             if keyCode == LEFT:
                 dx = -dx
