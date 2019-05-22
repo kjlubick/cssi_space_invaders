@@ -38,6 +38,7 @@ def draw():
     drawScore()
     drawEnemies()
     updateShip()
+    checkProjectiles()
     drawProjectiles()
     drawShip(player_x, player_y)
     
@@ -94,6 +95,16 @@ def checkGameOver():
         enemy_dx = 0
         text("GAME OVER", 150, 250)
 
+def checkProjectiles():
+    for ex, r in enumerate(enemies):
+        for ey, e in enumerate(r):
+            for p in player_projectiles:
+                px, py = p[0], p[1]
+                if e == "square":
+                    pass#print(ex, ey, px, py)
+                elif e == "circle":
+                    pass
+
 def drawShip(ship_x, ship_y):
     fill(0, 255, 0)
     global ship_size
@@ -112,8 +123,9 @@ def drawProjectiles():
             to_remove = i
         else:
             ellipse(projectile[0], projectile[1], 10, 10)
-    if to_remove:
-        player_projectiles.pop(i)
+    if to_remove is not None:
+        print("removing", to_remove)
+        player_projectiles.pop(to_remove)
 
 
 
