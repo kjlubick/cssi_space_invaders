@@ -16,13 +16,14 @@ enemy_step_y = 10
 
 enemy_width = 40
 enemy_space = 60
-enemy_height = 50
+enemy_block_width = enemy_width + enemy_space
+enemy_block_height = 50
 
 enemies=[
        ["square", "square", "square", "square", "square"],
        ["square", "square", "square", "square", "square"],
        ["circle", "circle", "circle", "circle", "circle"],
-       ["circle", "circle", "", "circle", "circle"],
+       ["circle", "circle", "circle", "circle", "circle"],
 ]
 
 # Board
@@ -64,7 +65,7 @@ def drawEnemies():
             elif e == "circle":
                 ellipse(x+enemy_width/2, y+enemy_width/2, enemy_width, enemy_width)
             x += (enemy_width + enemy_space)
-        y += enemy_height
+        y += enemy_block_height
 
 def moveEnemies():
     global enemy_x
@@ -91,20 +92,39 @@ def checkGameOver():
         enemy_dx = 0
         text("You won!!", 150, 250)
     
-    elif (enemy_y + enemy_rows * enemy_height) >= player_y:
+    elif (enemy_y + enemy_rows * enemy_block_height) >= player_y:
         enemy_dx = 0
         text("GAME OVER", 150, 250)
 
 def checkProjectiles():
-    for ex, r in enumerate(enemies):
-        for ey, e in enumerate(r):
-            for p in player_projectiles:
+    global player_score
+    to_remove = None
+    for e_i, r in enumerate(enemies):
+        for e_j, e in enumerate(r):
+            if e == "":
+                continue
+            for p_i, p in enumerate(player_projectiles):
                 px, py = p[0], p[1]
+                ex = e_j * enemy_block_width  + enemy_x
+                ey = e_i * enemy_block_height + enemy_y
                 if e == "square":
-                    pass#print(ex, ey, px, py)
+                    if px > ex and px < (ex + enemy_width) and py > ey and py < (ey + enemy_width):
+                        enemies[e_i][e_j] = ""
+                        to_remove = p_i
+                        player_score += 200
                 elif e == "circle":
-                    pass
-
+                    r = enemy_width/2
+                    cx = ex + r
+                    cy = ey + r
+                    d = sqrt((cx - px) * (cx - px) + (cy - py) * (cy - py))
+                    if d < r:
+                        enemies[e_i][e_j] = ""
+                        to_remove = p_i
+                        player_score += 100
+    if to_remove is not None:
+        print("hit", to_remove)
+        player_projectiles.pop(to_remove)
+        
 def drawShip(ship_x, ship_y):
     fill(0, 255, 0)
     global ship_size
